@@ -1,2 +1,2 @@
 # myWeb
-my web new ren
+myWeb created from the yii framework(1.+)
