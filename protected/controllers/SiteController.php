@@ -106,4 +106,21 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+    /**
+     * cookie
+     *
+     */
+    public  function  actionSetCookie()
+    {
+        setcookie('uu','55',time()+120);
+        setcookie('un','上看aaa看',time()+120);
+    }
+
+    public function actionGetCookie(){
+        var_dump($_COOKIE);
+        Yii::app()->user;
+        var_dump($_SESSION);
+    }
+
 }

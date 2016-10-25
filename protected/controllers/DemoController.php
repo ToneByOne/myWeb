@@ -9,14 +9,18 @@ class DemoController extends Controller
 	public function actionIndex()
 	{
 
-        //filter
+//        //filter
 //        $this->_filterDemo();
-
-        //exception
+//
+//        //exception
 //        $this->_demoException();
+//
+//        //error_log
+//        $this->_errorLogDemo();
 
-        //error_log
-        $this->_errorLogDemo();
+        //cookie
+//        $this->_cookieDemo();
+        $this->_getCookie();
 	}
 
     /**
@@ -78,7 +82,7 @@ class DemoController extends Controller
 
 
     /**
-     * error
+     * error_log
      */
     private function _errorLogDemo(){
         //服务器日志
@@ -86,7 +90,11 @@ class DemoController extends Controller
         var_dump($returnVal);
 
         //发送到邮箱
-        $returnVal = $this->sendEmail('1033168036@qq.com','发送到邮箱的错误日志','把手搭开始的');
+//        $returnVal = error_log('消息日志！',1,'1033168036@qq.com');
+//        var_dump($returnVal);
+
+        //写入自定义的error log(\r\n自已单引号和双引号区别)
+        $returnVal = error_log("\r\n自定义的!",3,'d:/error_log.log');
         var_dump($returnVal);
     }
 
@@ -115,6 +123,77 @@ class DemoController extends Controller
         $mail->Subject = $subject;
         $mail->MsgHTML($content);
         return $mail->Send();
+    }
+
+
+    /**
+     * cookie
+     *
+     */
+    public  function actionSetCookie()
+    {
+        echo setcookie('userid','112',time()+120);
+        echo setcookie('userName','上看看',time()+120);
+    }
+
+    public function actionGetCookie(){
+//        @session_start();
+        var_dump($_COOKIE);
+
+        var_dump($_SESSION);
+    }
+
+    /**
+     * file  handle
+     *
+     */
+    public function actionFile()
+    {
+        $filePath = "D:/demo.txt";
+        $fileHandle = fopen($filePath, 'a+') or  die('open file fail');
+        //open file ->fread (1)
+//        $fileStr = @fread($fileHandle,@filesize($filePath));
+//        echo $fileStr;
+
+        //open file ->fread (2)
+
+        $fileSize = fileSize($filePath);
+        $buffer = ($fileSize < 1024) ? $fileSize : 1024;
+        $bufferTotal = $buffer;
+
+        while (!feof($fileHandle) && $bufferTotal <= $fileSize) {
+            echo fread($fileHandle, $buffer);
+            $bufferTotal += $buffer;
+        }
+
+        //open file->fgets (获取单行)
+//        while(!feof($fileHandle)){
+//            echo fgets($fileHandle).'<br/>';
+//        }
+
+        //open file->fgetc (获取单字符)
+//       while(!feof($fileHandle)){
+//           echo fgetc($fileHandle);
+//       }
+
+        //write  file
+        $str = "fdgdfKDMFG 谷歌";
+        fwrite($fileHandle,$str);
+        fclose($fileHandle);
+
+
+    }
+
+    /**
+     * upload
+     *
+     */
+    public function actionUpload(){
+        if($_FILES){
+            var_dump($_FILES);
+            var_dump($_REQUEST);
+        }else
+            $this->render('file');
     }
 
 }
